@@ -14,6 +14,9 @@ import {
 } from '@/lib/scoring';
 import { categoryNames, categoryEmojis } from '@/lib/skills-data';
 import { Share2, Download, Home, RefreshCw } from 'lucide-react';
+import confetti from 'canvas-confetti';
+import { HomeschoolHubCTA } from '@/components/HomeschoolHubCTA';
+import { GovernmentSources } from '@/components/GovernmentSources';
 
 // Simple circular progress component
 function CircularProgress({ value, size = 200 }: { value: number; size?: number }) {
@@ -73,6 +76,45 @@ export default function ResultsPage() {
     loadAssessment();
   }, [params.id]);
 
+  // Trigger confetti when assessment loads successfully
+  useEffect(() => {
+    if (assessment && !loading && !error) {
+      // Fire confetti
+      const duration = 3000;
+      const animationEnd = Date.now() + duration;
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+      function randomInRange(min: number, max: number) {
+        return Math.random() * (max - min) + min;
+      }
+
+      const interval: any = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+
+        const particleCount = 50 * (timeLeft / duration);
+
+        confetti({
+          ...defaults,
+          particleCount,
+          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+          colors: ['#10B981', '#3B82F6', '#F59E0B', '#F472B6']
+        });
+        confetti({
+          ...defaults,
+          particleCount,
+          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+          colors: ['#10B981', '#3B82F6', '#F59E0B', '#F472B6']
+        });
+      }, 250);
+
+      return () => clearInterval(interval);
+    }
+  }, [assessment, loading, error]);
+
   async function loadAssessment(retryCount = 0) {
     try {
       setError(false);
@@ -118,12 +160,18 @@ export default function ResultsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-2xl font-semibold text-primary mb-2">
-            Calculating your results...
-          </div>
-          <p className="text-text-secondary">Just a moment!</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-surface">
+        <div className="text-center max-w-md mx-auto px-4">
+          <div className="text-6xl mb-6 animate-bounce">🌱</div>
+          <h2 className="text-3xl font-bold text-primary mb-3">
+            Preparing your results...
+          </h2>
+          <p className="text-xl text-text-secondary mb-2">
+            Just a moment!
+          </p>
+          <p className="text-base text-text-tertiary italic">
+            (Spoiler: You're doing better than you think!)
+          </p>
         </div>
       </div>
     );
@@ -131,13 +179,13 @@ export default function ResultsPage() {
 
   if (error && !loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-white to-surface p-4">
-        <div className="text-center max-w-md space-y-4 sm:space-y-6">
-          <div className="text-5xl sm:text-6xl">😕</div>
-          <h1 className="text-xl sm:text-2xl font-bold text-text-primary px-4">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-surface p-4">
+        <div className="text-center max-w-md space-y-6 sm:space-y-8">
+          <div className="text-6xl sm:text-7xl">😕</div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-text-primary px-4">
             Unable to Load Results
           </h1>
-          <p className="text-sm sm:text-base text-text-secondary px-4">
+          <p className="text-base sm:text-lg text-text-secondary px-4 leading-relaxed">
             We couldn't load your assessment results. This might be because the link is invalid or your internet connection is unstable.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
@@ -166,7 +214,7 @@ export default function ResultsPage() {
   const encouragingMessage = getEncouragingMessage(overall, assessment.year_group);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-surface">
+    <div className="min-h-screen bg-gradient-to-b from-background to-surface">
       {/* Header */}
       <header className="container mx-auto px-3 sm:px-4 py-4 sm:py-6">
         <Link href="/">
@@ -185,49 +233,56 @@ export default function ResultsPage() {
               <CircularProgress value={overall} size={window.innerWidth < 640 ? 160 : 200} />
             </div>
 
-            <div className="space-y-2 px-4">
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-text-primary">
+            <div className="space-y-3 px-4">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-text-primary text-balance">
                 You're Teaching More Than You Think
               </h1>
-              <div className="text-xl sm:text-2xl font-semibold" style={{ color: rating.color.replace('text-', '') }}>
+              <div className="text-2xl sm:text-3xl font-semibold" style={{ color: rating.color.replace('text-', '') }}>
                 {rating.band}
               </div>
             </div>
 
-            <div className="max-w-2xl mx-auto bg-primary-light border-2 border-primary/20 rounded-lg p-4 sm:p-6">
-              <p className="text-base sm:text-lg text-text-primary leading-relaxed">
+            <div className="max-w-2xl mx-auto bg-primary-light/50 border-2 border-primary/20 rounded-2xl p-6 sm:p-8 backdrop-blur-sm">
+              <p className="text-lg sm:text-xl text-text-primary leading-relaxed">
                 {encouragingMessage}
               </p>
             </div>
 
-            <div className="bg-white rounded-lg p-4 sm:p-6 max-w-2xl mx-auto">
-              <h3 className="font-semibold text-text-primary mb-3 text-sm sm:text-base">Why This Matters:</h3>
-              <ul className="text-left space-y-2 text-text-secondary text-sm sm:text-base">
+            <div className="card-elevated rounded-2xl p-6 sm:p-8 max-w-2xl mx-auto border-2 border-primary/10">
+              <h3 className="font-semibold text-text-primary mb-4 text-base sm:text-lg">💡 Why This Matters:</h3>
+              <ul className="text-left space-y-3 text-text-secondary text-base sm:text-lg">
                 <li className="flex items-start">
-                  <span className="text-primary mr-2 flex-shrink-0">→</span>
+                  <span className="text-primary mr-3 flex-shrink-0 text-xl">✓</span>
                   <span>School children often don't master all these skills either</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-primary mr-2 flex-shrink-0">→</span>
+                  <span className="text-primary mr-3 flex-shrink-0 text-xl">✓</span>
                   <span>Learning happens in bursts - gaps now often fill in later</span>
                 </li>
                 <li className="flex items-start">
-                  <span className="text-primary mr-2 flex-shrink-0">→</span>
+                  <span className="text-primary mr-3 flex-shrink-0 text-xl">✓</span>
                   <span>Your one-to-one attention means deeper understanding</span>
                 </li>
               </ul>
             </div>
           </div>
 
+          {/* HomeschoolHub CTA - Primary Conversion Point */}
+          <HomeschoolHubCTA
+            score={overall}
+            yearGroup={assessment.year_group}
+            variant="primary"
+          />
+
           {/* Category Breakdown */}
-          <div className="space-y-4 sm:space-y-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-text-primary text-center px-4">
+          <div className="space-y-6 sm:space-y-8">
+            <h2 className="text-2xl sm:text-3xl font-bold text-text-primary text-center px-4">
               Where You're Making Real Progress
             </h2>
 
-            <div className="grid gap-4 sm:gap-6">
+            <div className="grid gap-6 sm:gap-8">
               {Object.entries(categories).map(([category, score]) => (
-                <Card key={category} className="p-4 sm:p-6">
+                <Card key={category} className="p-6 sm:p-8 card-elevated border-2 border-primary/10 hover:border-primary/20 transition-all duration-300">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between gap-2">
                       <div className="flex items-center gap-2 min-w-0">
@@ -257,11 +312,11 @@ export default function ResultsPage() {
           </div>
 
           {/* What This Means Section */}
-          <div className="bg-accent-light border-2 border-accent/20 rounded-lg p-4 sm:p-6 md:p-8">
-            <h2 className="text-xl sm:text-2xl font-bold text-text-primary mb-3 sm:mb-4">
+          <div className="bg-accent-light/50 border-2 border-accent/20 rounded-2xl p-6 sm:p-8 md:p-10 backdrop-blur-sm">
+            <h2 className="text-2xl sm:text-3xl font-bold text-text-primary mb-4 sm:mb-6">
               What This Actually Means
             </h2>
-            <div className="space-y-3 sm:space-y-4 text-sm sm:text-base text-text-primary">
+            <div className="space-y-4 sm:space-y-5 text-base sm:text-lg text-text-primary">
               <p>
                 <span className="font-semibold">First:</span> You're doing better than you
                 think. {overall}% is excellent progress.
@@ -281,6 +336,13 @@ export default function ResultsPage() {
               </p>
             </div>
           </div>
+
+          {/* HomeschoolHub CTA - Secondary (Social Proof) */}
+          <HomeschoolHubCTA
+            score={overall}
+            yearGroup={assessment.year_group}
+            variant="secondary"
+          />
 
           {/* CTAs */}
           <div className="space-y-3 sm:space-y-4">
@@ -311,12 +373,22 @@ export default function ResultsPage() {
             </div>
           </div>
 
-          {/* Disclaimer */}
-          <div className="text-center text-xs sm:text-sm text-text-secondary bg-surface rounded-lg p-3 sm:p-4">
-            <p>
-              This assessment is for guidance only and does not constitute educational or
-              legal advice. Every child develops at their own pace.
-            </p>
+          {/* Disclaimer & Sources */}
+          <div className="space-y-6">
+            <div className="text-center text-xs sm:text-sm text-text-secondary bg-surface rounded-2xl p-4 sm:p-5 space-y-2">
+              <p>
+                This assessment is for guidance only and does not constitute educational or
+                legal advice. Every child develops at their own pace.
+              </p>
+              <HomeschoolHubCTA
+                score={overall}
+                yearGroup={assessment.year_group}
+                variant="footer"
+              />
+            </div>
+
+            {/* Government Sources */}
+            <GovernmentSources />
           </div>
         </div>
       </main>

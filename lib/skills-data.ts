@@ -1,41 +1,49 @@
-import { YearGroup, YearGroupSkills, YearGroupInfo } from './types';
+import { YearGroup, YearGroupSkills, YearGroupInfo, Skill } from './types';
+import { supabase } from './supabase';
 
 // Year group information
 export const yearGroupsInfo: YearGroupInfo[] = [
+  {
+    id: 'nursery',
+    name: 'Nursery',
+    ageRange: '3-4 years',
+    emoji: '🍼',
+    totalSkills: 49,
+  },
   {
     id: 'reception',
     name: 'Reception',
     ageRange: '4-5 years',
     emoji: '👶',
-    totalSkills: 30,
+    totalSkills: 50,
   },
   {
     id: 'year1',
     name: 'Year 1',
     ageRange: '5-6 years',
     emoji: '📚',
-    totalSkills: 34,
+    totalSkills: 54,
   },
   {
     id: 'year2',
     name: 'Year 2',
     ageRange: '6-7 years',
     emoji: '📐',
-    totalSkills: 38,
+    totalSkills: 58,
   },
   {
     id: 'year3',
     name: 'Year 3',
     ageRange: '7-8 years',
     emoji: '🔬',
-    totalSkills: 42,
+    totalSkills: 60,
   },
   {
     id: 'year4',
     name: 'Year 4',
     ageRange: '8-9 years',
     emoji: '📊',
-    totalSkills: 42,
+    totalSkills: 62,
   },
   {
     id: 'year5',
@@ -53,8 +61,9 @@ export const yearGroupsInfo: YearGroupInfo[] = [
   },
 ];
 
-// Reception (4-5 years) - 30 skills
-const receptionSkills: YearGroupSkills = {
+// OLD Reception skills - DEPRECATED - Now loaded from Supabase
+// Kept for reference only, actual skills are in database
+const receptionSkillsOLD: YearGroupSkills = {
   communication: [
     {
       id: 'rec-comm-1',
@@ -245,8 +254,9 @@ const receptionSkills: YearGroupSkills = {
   ],
 };
 
-// Year 3 (7-8 years) - 42 skills
-const year3Skills: YearGroupSkills = {
+// OLD Year 3 skills - DEPRECATED - Now loaded from Supabase
+// Kept for reference only, actual skills are in database
+const year3SkillsOLD: YearGroupSkills = {
   reading_writing: [
     {
       id: 'y3-rw-1',
@@ -509,20 +519,67 @@ const year3Skills: YearGroupSkills = {
   ],
 };
 
-// Main skills database
+// Main skills database - ALL LOADED FROM SUPABASE
+// This is just a placeholder, actual skills come from database
 export const skillsDatabase: Record<YearGroup, YearGroupSkills> = {
-  reception: receptionSkills,
-  year1: {}, // Placeholder for future implementation
-  year2: {}, // Placeholder for future implementation
-  year3: year3Skills,
-  year4: {}, // Placeholder for future implementation
-  year5: {}, // Placeholder for future implementation
-  year6: {}, // Placeholder for future implementation
+  nursery: {}, // Loaded from Supabase (49 skills across 7 EYFS areas)
+  reception: {}, // Loaded from Supabase (50 skills across 7 EYFS areas)
+  year1: {}, // Loaded from Supabase (54 skills)
+  year2: {}, // Loaded from Supabase (58 skills)
+  year3: {}, // Loaded from Supabase (60 skills)
+  year4: {}, // Loaded from Supabase (62 skills)
+  year5: {}, // Coming soon
+  year6: {}, // Coming soon
 };
 
 // Helper function to get skills by year group
 export function getSkillsByYearGroup(yearGroup: YearGroup): YearGroupSkills {
   return skillsDatabase[yearGroup] || {};
+}
+
+// Fetch skills from Supabase and populate the local database
+export async function loadSkillsFromSupabase(yearGroup: YearGroup): Promise<YearGroupSkills> {
+  try {
+    const { data, error } = await supabase
+      .from('skills')
+      .select('*')
+      .eq('year_group', yearGroup)
+      .order('skill_order', { ascending: true });
+
+    if (error) {
+      console.error(`Error loading ${yearGroup} skills:`, error);
+      return {};
+    }
+
+    if (!data || data.length === 0) {
+      console.warn(`No skills found for ${yearGroup}`);
+      return {};
+    }
+
+    // Group skills by category
+    const skillsByCategory: YearGroupSkills = {};
+    
+    (data as Skill[]).forEach((skill) => {
+      if (!skillsByCategory[skill.category]) {
+        skillsByCategory[skill.category] = [];
+      }
+      
+      skillsByCategory[skill.category].push({
+        id: skill.id,
+        text: skill.skill_text,
+        order: skill.skill_order,
+        isCore: skill.is_core,
+      });
+    });
+
+    // Cache in local skillsDatabase
+    skillsDatabase[yearGroup] = skillsByCategory;
+    
+    return skillsByCategory;
+  } catch (error) {
+    console.error(`Error fetching skills for ${yearGroup}:`, error);
+    return {};
+  }
 }
 
 // Helper function to get total skills count for a year group
@@ -533,6 +590,15 @@ export function getTotalSkillsCount(yearGroup: YearGroup): number {
 
 // Category display names
 export const categoryNames: Record<string, string> = {
+  // Nursery EYFS categories (3-4 years)
+  communication_language: 'Communication & Language',
+  physical_development: 'Physical Development',
+  personal_social_emotional: 'Personal, Social & Emotional',
+  literacy: 'Literacy',
+  mathematics: 'Mathematics',
+  understanding_world: 'Understanding the World',
+  expressive_arts: 'Expressive Arts & Design',
+  // Reception onwards categories
   communication: 'Communication',
   reading_writing: 'Reading & Writing',
   maths: 'Maths',
@@ -542,6 +608,15 @@ export const categoryNames: Record<string, string> = {
 
 // Category emojis
 export const categoryEmojis: Record<string, string> = {
+  // Nursery EYFS categories (3-4 years)
+  communication_language: '💬',
+  physical_development: '🤸',
+  personal_social_emotional: '🌟',
+  literacy: '📖',
+  mathematics: '🔢',
+  understanding_world: '🌍',
+  expressive_arts: '🎨',
+  // Reception onwards categories
   communication: '💬',
   reading_writing: '📚',
   maths: '🔢',
