@@ -60,9 +60,11 @@ export function HomeschoolHubCTA({ score, yearGroup, variant = 'primary' }: Home
   return (
     <div className="max-w-2xl mx-auto animate-fade-in">
       <div className="bg-gradient-to-br from-primary/10 via-accent/10 to-secondary/10 border-2 border-primary/30 rounded-2xl p-6 sm:p-8 md:p-10 backdrop-blur-sm hover:border-primary/40 transition-all duration-300">
-        <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
+        <div className='flex flex-col p-5 sm:flex-col items-center justify-center'>
+          
+          <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
           <div className="text-5xl sm:text-6xl flex-shrink-0">🎯</div>
-          <div className="flex-1">
+          <div className="flex-1 flex flex-col">
             <h3 className="text-2xl sm:text-3xl font-bold text-text-primary mb-3 sm:mb-4">
               Ready to Keep Building on This Progress?
             </h3>
@@ -87,13 +89,15 @@ export function HomeschoolHubCTA({ score, yearGroup, variant = 'primary' }: Home
                 <span>Join 2,000+ UK homeschool families who've found their rhythm</span>
               </li>
             </ul>
+          </div>
+          </div>
 
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <a
                 href={primaryUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block w-full sm:w-auto"
+                className="flex w-full sm:w-auto"
                 onClick={() => {
                   // Track conversion click
                   if (typeof window !== 'undefined' && (window as any).gtag) {
@@ -108,7 +112,7 @@ export function HomeschoolHubCTA({ score, yearGroup, variant = 'primary' }: Home
                 <Button
                   variant="gradient"
                   size="lg"
-                  className="w-full sm:w-auto text-base sm:text-lg shadow-xl hover:shadow-2xl"
+                  className="w-full text-base sm:text-lg shadow-xl hover:shadow-2xl"
                 >
                   Try HomeschoolHub Free →
                 </Button>
@@ -117,7 +121,7 @@ export function HomeschoolHubCTA({ score, yearGroup, variant = 'primary' }: Home
                 href={pricingUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block w-full sm:w-auto"
+                className="flex w-full sm:w-auto"
                 onClick={() => {
                   // Track pricing click
                   if (typeof window !== 'undefined' && (window as any).gtag) {
@@ -129,13 +133,14 @@ export function HomeschoolHubCTA({ score, yearGroup, variant = 'primary' }: Home
                   }
                 }}
               >
-                <Button variant="outline" size="lg" className="w-full sm:w-auto text-base sm:text-lg">
+                <Button variant="outline" size="lg" className="w-full text-base sm:text-lg">
                   See Plans & Pricing
                 </Button>
               </a>
             </div>
-          </div>
         </div>
+        
+        
       </div>
     </div>
   );

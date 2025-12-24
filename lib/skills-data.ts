@@ -1,4 +1,5 @@
-import { YearGroup, YearGroupSkills, YearGroupInfo } from './types';
+import { YearGroup, YearGroupSkills, YearGroupInfo, Skill } from './types';
+import { supabase } from './supabase';
 
 // Year group information
 export const yearGroupsInfo: YearGroupInfo[] = [
@@ -534,6 +535,51 @@ export const skillsDatabase: Record<YearGroup, YearGroupSkills> = {
 // Helper function to get skills by year group
 export function getSkillsByYearGroup(yearGroup: YearGroup): YearGroupSkills {
   return skillsDatabase[yearGroup] || {};
+}
+
+// Fetch skills from Supabase and populate the local database
+export async function loadSkillsFromSupabase(yearGroup: YearGroup): Promise<YearGroupSkills> {
+  try {
+    const { data, error } = await supabase
+      .from('skills')
+      .select('*')
+      .eq('year_group', yearGroup)
+      .order('skill_order', { ascending: true });
+
+    if (error) {
+      console.error(`Error loading ${yearGroup} skills:`, error);
+      return {};
+    }
+
+    if (!data || data.length === 0) {
+      console.warn(`No skills found for ${yearGroup}`);
+      return {};
+    }
+
+    // Group skills by category
+    const skillsByCategory: YearGroupSkills = {};
+    
+    (data as Skill[]).forEach((skill) => {
+      if (!skillsByCategory[skill.category]) {
+        skillsByCategory[skill.category] = [];
+      }
+      
+      skillsByCategory[skill.category].push({
+        id: skill.id,
+        text: skill.skill_text,
+        order: skill.skill_order,
+        isCore: skill.is_core,
+      });
+    });
+
+    // Cache in local skillsDatabase
+    skillsDatabase[yearGroup] = skillsByCategory;
+    
+    return skillsByCategory;
+  } catch (error) {
+    console.error(`Error fetching skills for ${yearGroup}:`, error);
+    return {};
+  }
 }
 
 // Helper function to get total skills count for a year group

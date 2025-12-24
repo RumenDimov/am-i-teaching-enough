@@ -9,11 +9,12 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/components/ui/toast';
 import {
   getSkillsByYearGroup,
+  loadSkillsFromSupabase,
   yearGroupsInfo,
   categoryNames,
   categoryEmojis,
 } from '@/lib/skills-data';
-import { YearGroup } from '@/lib/types';
+import { YearGroup, YearGroupSkills } from '@/lib/types';
 import { ArrowLeft, ArrowRight, CheckCircle2, Loader2 } from 'lucide-react';
 import { calculateScores } from '@/lib/scoring';
 
@@ -26,11 +27,24 @@ export default function AssessmentFlow() {
   const [checkedSkills, setCheckedSkills] = useState<Set<string>>(new Set());
   const [currentCategory, setCurrentCategory] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
+  const [skills, setSkills] = useState<YearGroupSkills>({});
+  const [isLoadingSkills, setIsLoadingSkills] = useState(true);
 
-  const skills = getSkillsByYearGroup(yearGroup);
   const categories = Object.keys(skills);
   const totalSkills = Object.values(skills).reduce((sum, arr) => sum + arr.length, 0);
   const yearGroupInfo = yearGroupsInfo.find(yg => yg.id === yearGroup);
+
+  // Load skills from Supabase
+  useEffect(() => {
+    const loadSkills = async () => {
+      setIsLoadingSkills(true);
+      const loadedSkills = await loadSkillsFromSupabase(yearGroup);
+      setSkills(loadedSkills);
+      setIsLoadingSkills(false);
+    };
+
+    loadSkills();
+  }, [yearGroup]);
 
   // Load saved progress from localStorage
   useEffect(() => {
@@ -140,6 +154,32 @@ export default function AssessmentFlow() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Year group not found</h1>
+          <Link href="/assessment">
+            <Button>Go Back</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoadingSkills) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-surface">
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
+          <h1 className="text-2xl font-bold mb-2">Loading Assessment...</h1>
+          <p className="text-text-secondary">Preparing {yearGroupInfo.name} skills</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (totalSkills === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-background to-surface">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">No skills found</h1>
+          <p className="text-text-secondary mb-6">Unable to load assessment for {yearGroupInfo.name}</p>
           <Link href="/assessment">
             <Button>Go Back</Button>
           </Link>

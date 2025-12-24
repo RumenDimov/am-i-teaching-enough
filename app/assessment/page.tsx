@@ -16,9 +16,9 @@ export const metadata: Metadata = {
 };
 
 export default function AssessmentSelection() {
-  // Filter to only show year groups with data (Nursery, Reception and Year 3)
+  // Filter to only show year groups with data (Nursery through Year 4)
   const availableYearGroups = yearGroupsInfo.filter(
-    yg => yg.id === 'nursery' || yg.id === 'reception' || yg.id === 'year3'
+    yg => yg.id === 'nursery' || yg.id === 'reception' || yg.id === 'year1' || yg.id === 'year2' || yg.id === 'year3' || yg.id === 'year4'
   );
 
   return (
@@ -78,7 +78,7 @@ export default function AssessmentSelection() {
           {yearGroupsInfo.length > availableYearGroups.length && (
             <div className="text-center text-xs sm:text-sm text-text-secondary bg-surface rounded-lg p-4">
               <p>
-                More year groups coming soon! Currently available: Nursery, Reception, and Year 3
+                More year groups coming soon! Currently available: Nursery, Reception, Year 1, Year 2, Year 3, and Year 4
               </p>
             </div>
           )}
