@@ -1,0 +1,18 @@
+# robots.txt for Am I Teaching Enough?
+# Allow all search engines to crawl the site
+
+User-agent: *
+Allow: /
+
+# Disallow API routes and admin paths
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://amiteachingenough.com/sitemap.xml
+
+# Crawl-delay for specific bots (optional)
+User-agent: Googlebot
+Crawl-delay: 0
+
+User-agent: Bingbot
+Crawl-delay: 0
