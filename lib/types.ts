@@ -47,7 +47,7 @@ export interface SkillData {
   isCore: boolean;
 }
 
-export type YearGroup = 'reception' | 'year1' | 'year2' | 'year3' | 'year4' | 'year5' | 'year6';
+export type YearGroup = 'nursery' | 'reception' | 'year1' | 'year2' | 'year3' | 'year4' | 'year5' | 'year6';
 
 export type Category = 'reading_writing' | 'maths' | 'science' | 'life_skills';
 
