@@ -222,7 +222,7 @@ export default function AssessmentFlow() {
       {/* Category Tabs */}
       <div className="bg-white border-b border-border">
         <div className="container mx-auto px-3 sm:px-4">
-          <div className="flex gap-2 overflow-x-auto py-3 sm:py-4 scrollbar-hide">
+          <div className="flex gap-2 overflow-x-auto py-3 sm:py-4 pb-2 scroll-smooth [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-gray-400">
             {categories.map((category, index) => {
               const categorySkills = skills[category];
               const checked = categorySkills.filter(s => checkedSkills.has(s.id)).length;

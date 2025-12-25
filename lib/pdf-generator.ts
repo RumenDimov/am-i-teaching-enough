@@ -6,7 +6,7 @@
 import jsPDF from 'jspdf';
 import { Assessment } from './types';
 import { getRatingBand, getEncouragingMessage, getCategoryFeedback } from './scoring';
-import { categoryNames, categoryEmojis, yearGroupsInfo } from './skills-data';
+import { categoryNames, yearGroupsInfo } from './skills-data';
 
 export function generateAssessmentPDF(assessment: Assessment): void {
   const pdf = new jsPDF({
@@ -150,7 +150,9 @@ export function generateAssessmentPDF(assessment: Assessment): void {
   insights.forEach(insight => {
     checkPageBreak(8);
     pdf.setTextColor(...primaryColor);
-    pdf.text('✓', margin + 2, yPos);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text('•', margin + 2, yPos);
+    pdf.setFont('helvetica', 'normal');
     pdf.setTextColor(...secondaryTextColor);
     const lines = pdf.splitTextToSize(insight, contentWidth - 10);
     pdf.text(lines, margin + 8, yPos);
