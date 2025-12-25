@@ -142,7 +142,7 @@ export function generateAssessmentPDF(assessment: Assessment): void {
   pdf.setTextColor(...secondaryTextColor);
 
   const insights = [
-    'School children often don\'t master all these skills either',
+    'School children often do not master all these skills either',
     'Learning happens in bursts - gaps now often fill in later',
     'Your one-to-one attention means deeper understanding'
   ];
@@ -151,7 +151,7 @@ export function generateAssessmentPDF(assessment: Assessment): void {
     checkPageBreak(8);
     pdf.setTextColor(...primaryColor);
     pdf.setFont('helvetica', 'bold');
-    pdf.text('•', margin + 2, yPos);
+    pdf.text('>', margin + 2, yPos);
     pdf.setFont('helvetica', 'normal');
     pdf.setTextColor(...secondaryTextColor);
     const lines = pdf.splitTextToSize(insight, contentWidth - 10);
@@ -234,8 +234,8 @@ export function generateAssessmentPDF(assessment: Assessment): void {
   pdf.setFont('helvetica', 'normal');
 
   const insights2 = [
-    `First: You're doing better than you think. ${overall}% is excellent progress.`,
-    `Second: The remaining ${100 - overall}%? That's not "behind" - that's "not yet."`,
+    `First: You are doing better than you think. ${overall}% is excellent progress.`,
+    `Second: The remaining ${100 - overall}%? That is not "behind" - that is "not yet."`,
     `Third: Schools typically see similar or lower percentages at this age.`
   ];
 
