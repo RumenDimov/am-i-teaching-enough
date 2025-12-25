@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { Database, SupabaseError } from '@/lib/database.types';
 import { v4 as uuidv4 } from 'uuid';
+
+type AssessmentRow = Database['public']['Tables']['assessments']['Row'];
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,20 +22,28 @@ export async function POST(request: NextRequest) {
     const sessionId = uuidv4();
 
     // Insert assessment into Supabase
-    const { data, error } = await supabase
+    type AssessmentInsert = Database['public']['Tables']['assessments']['Insert'];
+
+    const assessmentData: AssessmentInsert = {
+      session_id: sessionId,
+      year_group: yearGroup,
+      skills_checked: skillsChecked,
+      results: results,
+      overall_score: results.overall,
+      email: email || null,
+    };
+
+    const result = await supabase
       .from('assessments')
-      .insert([
-        {
-          session_id: sessionId,
-          year_group: yearGroup,
-          skills_checked: skillsChecked,
-          results: results,
-          overall_score: results.overall,
-          email: email || null,
-        },
-      ])
+      // @ts-ignore - Supabase types are inferred at runtime, not build time
+      .insert(assessmentData)
       .select()
       .single();
+
+    const { data, error } = result as {
+      data: AssessmentRow | null;
+      error: SupabaseError | null;
+    };
 
     if (error) {
       return NextResponse.json(
@@ -45,7 +56,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ id: data.id, sessionId: data.session_id });
+    if (!data) {
+      return NextResponse.json(
+        { error: 'No data returned from database' },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({
+      id: data.id,
+      sessionId: data.session_id
+    });
   } catch (error) {
     return NextResponse.json(
       { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
