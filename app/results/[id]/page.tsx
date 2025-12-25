@@ -17,6 +17,7 @@ import { Share2, Download, Home, RefreshCw } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { HomeschoolHubCTA } from '@/components/HomeschoolHubCTA';
 import { GovernmentSources } from '@/components/GovernmentSources';
+import { generateAssessmentPDF } from '@/lib/pdf-generator';
 
 // Simple circular progress component
 function CircularProgress({ value, size = 200 }: { value: number; size?: number }) {
@@ -155,6 +156,17 @@ export default function ResultsPage() {
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
       showToast('Failed to copy link. Please copy it manually from the address bar.', 'error');
+    }
+  };
+
+  const handleDownloadPDF = () => {
+    try {
+      if (!assessment) return;
+      generateAssessmentPDF(assessment);
+      showToast('PDF downloaded successfully!', 'success');
+    } catch (error) {
+      console.error('PDF generation error:', error);
+      showToast('Failed to generate PDF. Please try again.', 'error');
     }
   };
 
@@ -357,10 +369,15 @@ export default function ResultsPage() {
                 {copied ? 'Link Copied!' : 'Share Results'}
               </Button>
 
-              <Button variant="outline" size="lg" className="w-full text-sm sm:text-base" disabled>
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full text-sm sm:text-base"
+                onClick={handleDownloadPDF}
+              >
                 <Download className="mr-2 h-4 w-4" />
-                <span className="hidden sm:inline">Get PDF Report (Coming Soon)</span>
-                <span className="sm:hidden">PDF (Coming Soon)</span>
+                <span className="hidden sm:inline">Download PDF Report</span>
+                <span className="sm:hidden">Download PDF</span>
               </Button>
             </div>
 

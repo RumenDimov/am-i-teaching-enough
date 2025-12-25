@@ -32,7 +32,7 @@ export function FAQSchema() {
         name: 'Which year groups are currently available?',
         acceptedAnswer: {
           '@type': 'Answer',
-          text: 'Currently, we offer assessments for Reception (ages 4-5) and Year 3 (ages 7-8). More year groups will be added soon.',
+          text: 'We offer assessments for all primary year groups: Nursery (ages 3-4), Reception (ages 4-5), Year 1 (ages 5-6), Year 2 (ages 6-7), Year 3 (ages 7-8), Year 4 (ages 8-9), Year 5 (ages 9-10), and Year 6 (ages 10-11).',
         },
       },
       {

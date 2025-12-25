@@ -1,6 +1,91 @@
 # Changelog - Am I Teaching Enough?
 
-## Latest Updates (2025-12-24)
+## Latest Updates (2025-12-25)
+
+### Added: Year 5 & Year 6 Complete Curricula 🎓
+
+**Year 5 (9-10 years) - 64 skills:**
+- Reading & Writing: 21 skills (13 core)
+- Mathematics: 23 skills (15 core)
+- Science: 14 skills (10 core)
+- Life Skills: 6 skills (4 core)
+- Total: 64 skills with 42 core skills (66%)
+
+**Year 6 (10-11 years) - 68 skills:**
+- Reading & Writing: 22 skills (13 core)
+- Mathematics: 24 skills (15 core)
+- Science: 16 skills (11 core)
+- Life Skills: 6 skills (5 core)
+- Total: 68 skills with 44 core skills (65%)
+
+**Official Sources Verified:**
+- National Curriculum: English Programmes of Study (Upper KS2)
+- National Curriculum: Mathematics Programmes of Study
+- National Curriculum: Science Programmes of Study
+
+**Files Created:**
+- `lib/year5-skills-official.ts` - Year 5 skills dataset
+- `lib/year6-skills-official.ts` - Year 6 skills dataset
+- `YEAR5-SKILLS-VERIFICATION.md` - Year 5 verification documentation
+- `YEAR6-SKILLS-VERIFICATION.md` - Year 6 verification documentation
+- `scripts/upload-year5-skills.ts` - Year 5 upload script
+- `scripts/upload-year6-skills.ts` - Year 6 upload script
+
+**Database Updates:**
+- ✅ Uploaded all Year 5 skills to Supabase
+- ✅ Uploaded all Year 6 skills to Supabase
+- ✅ Both verified and passing validation
+
+**UI Updates:**
+- Updated assessment selection page to include Year 5 & Year 6
+- Updated FAQ to list all available year groups
+- Updated metadata and SEO keywords
+- All 8 primary year groups now available (Nursery through Year 6)
+
+### Added: PDF Report Generation 📄
+
+**Features:**
+- Professional PDF reports with assessment results
+- Includes overall score with visual indicator
+- Category breakdown with progress bars
+- Encouraging messages and key insights
+- Year group and date information
+- Branded design matching app aesthetic
+- Automatic download with proper filename
+
+**Implementation:**
+- Created `lib/pdf-generator.ts` utility
+- Uses jsPDF library (already in dependencies)
+- Full A4 format with proper page breaks
+- Consistent typography and colors
+- Mobile-friendly generation
+
+**User Experience:**
+- "Download PDF Report" button now functional (was "Coming Soon")
+- Toast notification on successful download
+- Error handling for failed generations
+- Filename format: `assessment-{year-group}-{date}.pdf`
+
+**Files Modified:**
+- `app/results/[id]/page.tsx` - Added PDF download functionality
+- `lib/pdf-generator.ts` - New PDF generation utility
+
+### Updated: Documentation
+
+**README.md:**
+- ✅ Updated to show all 8 year groups available
+- ✅ Listed all skill counts per year group
+- ✅ Moved PDF generation from "Coming Soon" to "Completed"
+- ✅ Marked all year groups as implemented
+
+**Features Now Complete:**
+- All primary year groups (Nursery - Year 6)
+- PDF report generation and download
+- Database integration with all skills verified
+
+---
+
+## Previous Updates (2025-12-24)
 
 ### Removed: Extended Trial Messaging
 - ❌ Removed "Assessment users get 30-day free trial (vs. 14-day standard)" from HomeschoolHub CTA

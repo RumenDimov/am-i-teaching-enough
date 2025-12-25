@@ -50,14 +50,14 @@ export const yearGroupsInfo: YearGroupInfo[] = [
     name: 'Year 5',
     ageRange: '9-10 years',
     emoji: '🎓',
-    totalSkills: 42,
+    totalSkills: 64,
   },
   {
     id: 'year6',
     name: 'Year 6',
     ageRange: '10-11 years',
     emoji: '🎯',
-    totalSkills: 42,
+    totalSkills: 68,
   },
 ];
 

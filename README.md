@@ -84,26 +84,32 @@ A free assessment tool helping UK homeschool parents measure their child's progr
 ### MVP (Completed)
 
 - ✅ Landing page with hero section
-- ✅ Year group selection (Reception & Year 3)
+- ✅ Year group selection (All 8 year groups: Nursery through Year 6)
 - ✅ Interactive assessment flow with skill checklists
 - ✅ Results page with scoring and encouragement
 - ✅ Category breakdowns
 - ✅ Progress tracking
 - ✅ Local storage for progress persistence
 - ✅ Database integration (Supabase)
+- ✅ PDF report generation and download
 
 ### Coming Soon
 
-- ⏳ Email results (PDF generation)
-- ⏳ All 7 year groups (Year 1, 2, 4, 5, 6)
+- ⏳ Email results delivery
 - ⏳ Social sharing
 - ⏳ User accounts for tracking over time
 
 ## Available Year Groups
 
-Currently implemented:
-- **Reception** (4-5 years) - 30 skills
-- **Year 3** (7-8 years) - 42 skills
+All primary year groups now implemented:
+- **Nursery** (3-4 years) - 49 skills
+- **Reception** (4-5 years) - 50 skills
+- **Year 1** (5-6 years) - 54 skills
+- **Year 2** (6-7 years) - 58 skills
+- **Year 3** (7-8 years) - 60 skills
+- **Year 4** (8-9 years) - 62 skills
+- **Year 5** (9-10 years) - 64 skills
+- **Year 6** (10-11 years) - 68 skills
 
 Skill categories:
 - Communication / Reading & Writing

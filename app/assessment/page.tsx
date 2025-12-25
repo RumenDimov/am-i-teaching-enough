@@ -8,7 +8,7 @@ import { GovernmentSources } from '@/components/GovernmentSources';
 
 export const metadata: Metadata = {
   title: 'Choose Year Group | UK Homeschool Assessment',
-  description: 'Select your child\'s year group (Reception or Year 3) to begin a free 3-minute assessment based on UK National Curriculum milestones. Get instant, encouraging feedback.',
+  description: 'Select your child\'s year group (Nursery through Year 6) to begin a free 3-minute assessment based on UK National Curriculum milestones. Get instant, encouraging feedback.',
   openGraph: {
     title: 'Choose Year Group | Am I Teaching Enough?',
     description: 'Select your child\'s year group to begin a free homeschool assessment',
@@ -16,9 +16,9 @@ export const metadata: Metadata = {
 };
 
 export default function AssessmentSelection() {
-  // Filter to only show year groups with data (Nursery through Year 4)
+  // Filter to only show year groups with data (Nursery through Year 6)
   const availableYearGroups = yearGroupsInfo.filter(
-    yg => yg.id === 'nursery' || yg.id === 'reception' || yg.id === 'year1' || yg.id === 'year2' || yg.id === 'year3' || yg.id === 'year4'
+    yg => yg.id === 'nursery' || yg.id === 'reception' || yg.id === 'year1' || yg.id === 'year2' || yg.id === 'year3' || yg.id === 'year4' || yg.id === 'year5' || yg.id === 'year6'
   );
 
   return (
@@ -78,7 +78,7 @@ export default function AssessmentSelection() {
           {yearGroupsInfo.length > availableYearGroups.length && (
             <div className="text-center text-xs sm:text-sm text-text-secondary bg-surface rounded-lg p-4">
               <p>
-                More year groups coming soon! Currently available: Nursery, Reception, Year 1, Year 2, Year 3, and Year 4
+                All year groups now available! Nursery through Year 6 (ages 3-11)
               </p>
             </div>
           )}
